@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday, Nada 🤍</title>
+
+<!--
+  ============================================================
+  HOW TO MAKE THIS YOURS — read me first!
+  ============================================================
+  1) PHOTOS: Next to this HTML file, make a folder named "images"
+     and drop in files named exactly:
+         photo-1.jpg  photo-2.jpg  photo-3.jpg  photo-4.jpg  photo-5.jpg
+         photo-6.jpg  photo-7.jpg  photo-8.jpg  photo-9.jpg  photo-10.jpg
+     (jpg or png both fine — just keep the same file names, or
+     update the "src" in the <img> tags below to match your files.)
+     Until you add them, each spot shows a soft placeholder so the
+     page still looks nice.
+
+  2) MUSIC: Make a folder named "audio" next to this file and add
+     your song as:  audio/our-song.mp3
+     (Any single mp3 works — just name it our-song.mp3, or edit the
+     <audio> "src" below.)
+
+  3) TEXT: Every headline, letter, caption and message on this page
+     is editable right in the browser — just click the text and type
+     (look for the dashed underline, that means it's editable).
+     Editing in the browser is great for previewing, but it does NOT
+     save automatically. To make your changes permanent, open this
+     file in a text editor and search for the sentences in [brackets]
+     and replace them with your own words, or copy your finished text
+     back into the file.
+
+  4) OPEN IT: Just double-click this .html file to open it in any
+     browser (Chrome, Safari, Edge...). Keep it in the same folder
+     as your "images" and "audio" folders.
+
+  That's it — happy editing! 🤍
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --cream:#FFF8F4;
+    --paper:#FFFDFB;
+    --blush:#F7DDE1;
+    --blush-soft:#FCEDEF;
+    --rose:#E3A9B4;
+    --rosegold:#C98A76;
+    --plum:#5C2A3B;
+    --ink:#3A2028;
+    --gold:#D8B26E;
+    --shadow: 0 20px 45px -20px rgba(92,42,59,0.35);
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Jost', sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+  body.locked{ overflow:hidden; height:100vh; }
+
+  h1,h2,h3{
+    font-family:'Cormorant Garamond', serif;
+    color:var(--plum);
+    margin:0;
+    font-weight:600;
+  }
+  .script{ font-family:'Great Vibes', cursive; font-weight:400; }
+
+  [contenteditable="true"]{
+    outline: none;
+    border-bottom: 1px dashed transparent;
+    transition: border-color .2s ease, background .2s ease;
+    border-radius: 3px;
+  }
+  [contenteditable="true"]:hover{
+    border-bottom-color: var(--rosegold);
+    background: rgba(216,178,110,0.08);
+  }
+  [contenteditable="true"]:focus{
+    border-bottom-color: var(--rosegold);
+    background: rgba(216,178,110,0.12);
+  }
+
+  section{ position:relative; padding: 110px 6vw; }
+  .center{ text-align:center; }
+  .max{ max-width: 880px; margin:0 auto; }
+
+  /* ---------- Ambient floating hearts/petals ---------- */
+  .petals{
+    position:fixed; inset:0; pointer-events:none; z-index:150; overflow:hidden;
+  }
+  .petal{
+    position:absolute; top:-8vh; will-change:transform; color:var(--rose);
+    animation-name:drift; animation-timing-function:linear; animation-iteration-count:infinite;
+  }
+  @keyframes drift{
+    0%{ transform:translateY(0) translateX(0) rotate(0deg); }
+    50%{ transform:translateY(55vh) translateX(24px) rotate(160deg); }
+    100%{ transform:translateY(112vh) translateX(-18px) rotate(320deg); }
+  }
+
+  /* ---------- Static flower accents on the envelope screen ---------- */
+  .gate-flowers{ position:absolute; inset:0; pointer-events:none; z-index:1; overflow:hidden; }
+  .gate-flower{
+    position:absolute; font-size: 34px; opacity:.8; filter: drop-shadow(0 6px 10px rgba(92,42,59,0.15));
+    animation: sway 6s ease-in-out infinite;
+  }
+  .gate-flower.small{ font-size:22px; opacity:.65; }
+  .gate-flower.big{ font-size:46px; }
+  @keyframes sway{
+    0%,100%{ transform: translateY(0) rotate(-6deg); }
+    50%{ transform: translateY(-14px) rotate(6deg); }
+  }
+
+  /* ---------- Gate / Envelope ---------- */
+  #gate{
+    position:fixed; inset:0; z-index:100;
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    background: radial-gradient(circle at 50% 30%, var(--blush-soft), var(--cream) 70%);
+    transition: opacity .9s ease;
+  }
+  #gate.hide{ opacity:0; pointer-events:none; }
+  #gate .prompt{
+    font-family:'Great Vibes', cursive; font-size: clamp(28px,4vw,40px);
+    color:var(--plum); margin-bottom: 34px; text-align:center; padding: 0 20px;
+  }
+  .envelope-wrap{ perspective: 1200px; }
+  .envelope{
+    position:relative; width: min(76vw, 300px); height: min(56vw, 190px);
+    background: linear-gradient(160deg, var(--paper), var(--blush-soft));
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+  }
+  .envelope::before, .envelope::after{
+    content:""; position:absolute; top:0; width:0; height:0;
+    border-top: min(28vw,110px) solid var(--blush);
+  }
+  .envelope::before{ left:0; border-left: min(38vw,150px) solid transparent; }
+  .envelope::after{ right:0; border-right: min(38vw,150px) solid transparent; }
+  .flap{
+    position:absolute; top:0; left:0; width:100%; height: 62%;
+    background: linear-gradient(160deg, var(--rose), var(--blush));
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transition: transform 1s cubic-bezier(.6,-0.2,.35,1.4);
+    z-index:3;
+  }
+  #gate.open .flap{ transform: rotateX(178deg); z-index:1; }
+  .letter-card{
+    position:absolute; left:50%; bottom:8%; transform: translate(-50%, 0);
+    width: 82%; height: 60%; background: var(--paper);
+    border-radius:4px; box-shadow: 0 8px 20px -8px rgba(92,42,59,0.4);
+    z-index:2; transition: transform 1.1s ease .15s, opacity 1.1s ease .15s, z-index 0s .15s;
+    display:flex; align-items:center; justify-content:center; text-align:center; padding: 12px;
+  }
+  .letter-card span{ font-family:'Cormorant Garamond', serif; color:var(--rosegold); font-size:14px; letter-spacing:2px; text-transform:uppercase; }
+  #gate.open .letter-card{ transform: translate(-50%, -145%); z-index:4; }
+  .seal{
+    position:absolute; left:50%; top: 55%; transform: translate(-50%,-50%);
+    width:64px; height:64px; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #E7BFA6, var(--rosegold) 70%);
+    color:var(--paper); border:none; cursor:pointer; z-index:4;
+    display:flex; align-items:center; justify-content:center; font-size:22px;
+    box-shadow: 0 6px 14px -4px rgba(92,42,59,0.5);
+    transition: transform .35s ease, opacity .5s ease;
+  }
+  .seal:hover{ transform: translate(-50%,-50%) scale(1.08); }
+  #gate.crack .seal{ transform: translate(-50%,-50%) scale(1.35) rotate(15deg); opacity:0; }
+  #gate .hint{ margin-top: 26px; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--rosegold); }
+
+  /* ---------- Hero ---------- */
+  #hero{ min-height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; flex-direction:column; }
+  #hero h1{ font-size: clamp(42px, 8vw, 92px); line-height:1.05; }
+  #hero .sub{ font-size: clamp(17px,2.2vw,22px); max-width:560px; margin: 22px auto 0; color: var(--plum); opacity:.85; }
+  #hero .divider{ margin: 28px auto; width:60px; height:1px; background: var(--rosegold); }
+  .scroll-cue{ margin-top:60px; font-size:26px; color:var(--rosegold); animation: bob 2s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(10px);} }
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal{ opacity:0; transform: translateY(36px); transition: opacity .9s ease, transform .9s ease; }
+  .reveal.in-view{ opacity:1; transform:none; }
+
+  /* ---------- Letter section ---------- */
+  #letter{ background: var(--blush-soft); }
+  .letter-paper{
+    background: var(--paper); border-radius:6px; box-shadow: var(--shadow);
+    padding: clamp(28px,6vw,64px); position:relative;
+  }
+  .letter-paper::before{
+    content:"❀"; position:absolute; top:-22px; left:50%; transform:translateX(-50%);
+    background:var(--gold); color:var(--paper); width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow: var(--shadow);
+  }
+  .letter-paper p{ font-size: clamp(16px,2vw,19px); line-height:1.9; color:var(--ink); }
+  .letter-paper p:first-of-type::first-letter{
+    font-family:'Cormorant Garamond', serif; font-size: 3.2em; float:left; line-height:0.8;
+    padding: 6px 10px 0 0; color:var(--rosegold);
+  }
+  .signoff{ text-align:right; margin-top:18px; font-size: clamp(28px,4vw,36px); color:var(--rosegold); }
+
+  /* ---------- Photo frames (shared) ---------- */
+  .photo-frame{ position:relative; width:100%; aspect-ratio: 4/5; background: var(--blush); border-radius:2px; overflow:hidden; }
+  .photo-frame img{ display:none; width:100%; height:100%; object-fit:cover; }
+  .photo-frame img.loaded{ display:block; }
+  .photo-placeholder{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    color: var(--rosegold); font-size:13px; letter-spacing:1px; background: repeating-linear-gradient(135deg, var(--blush-soft), var(--blush-soft) 10px, var(--blush) 10px, var(--blush) 20px);
+  }
+  .photo-placeholder .icon{ font-size:26px; }
+
+  /* ---------- Scrapbook / reasons ---------- */
+  #memories{ background: var(--cream); }
+  .memories-head{ margin-bottom: 70px; }
+  .memory-row{ display:flex; align-items:center; gap: 60px; margin-bottom: 90px; }
+  .memory-row:nth-child(even){ flex-direction: row-reverse; }
+  .memory-row .polaroid{ flex: 0 0 260px; }
+  .memory-row .text{ flex:1; }
+  .polaroid{
+    background: var(--paper); padding: 14px 14px 34px; box-shadow: var(--shadow); position:relative;
+  }
+  .polaroid .caption{
+    font-family:'Great Vibes', cursive; font-size:20px; color:var(--plum); text-align:center; margin-top:10px;
+  }
+  .memory-row .num{ font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--rosegold); font-size:17px; letter-spacing:2px; }
+  .memory-row .reason{ font-size: clamp(19px,2.4vw,26px); color:var(--plum); font-family:'Cormorant Garamond', serif; line-height:1.5; margin-top:10px; }
+
+  @media (max-width: 760px){
+    .memory-row, .memory-row:nth-child(even){ flex-direction:column; }
+    .memory-row .polaroid{ flex: 0 0 auto; width: 74%; max-width:280px; }
+  }
+
+  /* ---------- Gallery ---------- */
+  #gallery{ background: var(--blush-soft); }
+  .gallery-grid{
+    display:grid; grid-template-columns: repeat(5, 1fr); gap: 26px 20px; margin-top: 60px;
+  }
+  .gallery-item{ cursor:pointer; transition: transform .35s ease; }
+  .gallery-item:nth-child(2n){ transform: translateY(22px) rotate(-1.5deg); }
+  .gallery-item:nth-child(3n){ transform: translateY(-10px) rotate(1.5deg); }
+  .gallery-item:nth-child(5n){ transform: translateY(14px) rotate(-1deg); }
+  .gallery-item:hover{ transform: translateY(-6px) scale(1.04) !important; z-index:2; }
+  .gallery-item .photo-frame{ box-shadow: var(--shadow); border: 6px solid var(--paper); aspect-ratio:1/1; }
+  @media (max-width: 900px){ .gallery-grid{ grid-template-columns: repeat(2, 1fr); } }
+
+  #lightbox{
+    position:fixed; inset:0; background: rgba(58,32,40,0.86); z-index:200;
+    display:none; align-items:center; justify-content:center; padding: 5vw; cursor: zoom-out;
+  }
+  #lightbox.active{ display:flex; }
+  #lightbox img{ max-width: 90vw; max-height:86vh; border-radius:4px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+
+  /* ---------- Music ---------- */
+  #music{ background: var(--cream); }
+  .player{
+    display:flex; align-items:center; justify-content:center; gap: 56px; flex-wrap:wrap;
+  }
+  .vinyl{
+    width:190px; height:190px; border-radius:50%;
+    background: repeating-radial-gradient(circle, #3A2028 0px, #3A2028 2px, #4a2a35 3px, #3A2028 4px);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: var(--shadow);
+    animation: spin 4s linear infinite paused;
+  }
+  .vinyl.spinning{ animation-play-state: running; }
+  .vinyl-label{
+    width:70px; height:70px; border-radius:50%; background: var(--rosegold); color: var(--paper);
+    display:flex; align-items:center; justify-content:center; font-size:24px;
+    border: 3px solid var(--paper);
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  .tonearm{
+    position:relative; width:2px; height:0; /* purely decorative dot below */
+  }
+  .player-info{ text-align:left; }
+  .player-info .title{ font-family:'Cormorant Garamond', serif; font-size:26px; color:var(--plum); }
+  .player-info .artist{ font-size:14px; letter-spacing:1px; color:var(--rosegold); margin-top:4px; }
+  #playBtn{
+    margin-top:18px; border:1px solid var(--rosegold); background: transparent; color:var(--rosegold);
+    border-radius: 30px; padding: 10px 26px; font-family:'Jost'; letter-spacing:1px; cursor:pointer;
+    transition: background .25s ease, color .25s ease;
+  }
+  #playBtn:hover{ background: var(--rosegold); color: var(--paper); }
+  .audio-hint{ font-size:13px; color:var(--rosegold); margin-top:10px; opacity:.85; }
+
+  /* ---------- Cake / finale ---------- */
+  #finale{ background: var(--blush-soft); text-align:center; overflow:hidden; }
+  #finale .prompt{ font-size: clamp(17px,2.2vw,20px); color:var(--plum); margin-bottom: 50px; }
+  .cake{ display:flex; flex-direction:column; align-items:center; }
+  .candles{ display:flex; gap:22px; margin-bottom: -6px; }
+  .candle{ position:relative; width:8px; height:46px; background: linear-gradient(var(--rose), var(--rosegold)); border-radius:2px; cursor:pointer; }
+  .candle .flame{
+    position:absolute; top:-20px; left:50%; transform:translateX(-50%);
+    width:12px; height:18px; border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+    background: radial-gradient(circle at 50% 70%, #FFF3C4, var(--gold) 60%, #E38B4F 100%);
+    animation: flicker 1.4s ease-in-out infinite;
+  }
+  @keyframes flicker{ 0%,100%{ transform: translateX(-50%) scale(1) rotate(-2deg);} 50%{ transform: translateX(-50%) scale(1.12) rotate(3deg);} }
+  .candle.out .flame{ display:none; }
+  .candle.out::after{
+    content:"↟"; position:absolute; top:-30px; left:50%; transform:translateX(-50%); color:#B9AFAF; font-size:12px; opacity:.7;
+  }
+  .tiers{ width:0; height:0; }
+  .tier1{ width:220px; height:60px; background: linear-gradient(var(--paper), var(--blush)); border-radius: 6px 6px 0 0; box-shadow: var(--shadow); }
+  .tier2{ width:280px; height:70px; background: linear-gradient(var(--rose), var(--rosegold)); border-radius: 8px 8px 4px 4px; margin-top:-2px; box-shadow: var(--shadow); }
+  .cake-hint{ margin-top:22px; font-size:13px; letter-spacing:1px; color:var(--rosegold); }
+
+  .final-message{
+    max-width:640px; margin: 70px auto 0; opacity:0; max-height:0; overflow:hidden;
+    transition: opacity 1s ease, max-height 1.2s ease;
+  }
+  .final-message.show{ opacity:1; max-height:600px; }
+  .final-message p{ font-size: clamp(17px,2.2vw,20px); line-height:1.9; color:var(--ink); }
+  .final-message .signoff{ text-align:center; }
+
+  .confetti-layer{ position:fixed; inset:0; pointer-events:none; z-index:150; overflow:hidden; }
+  .confetti-heart{
+    position:absolute; bottom:-5vh; font-size: 18px; animation: pop var(--dur,1.6s) ease-out forwards;
+  }
+  @keyframes pop{
+    0%{ transform: translate(0,0) rotate(0deg); opacity:1; }
+    100%{ transform: translate(var(--dx,0), -75vh) rotate(340deg); opacity:0; }
+  }
+
+  footer{ padding: 60px 6vw 80px; text-align:center; color:var(--rosegold); font-size:13px; letter-spacing:1px; }
+  footer .heart-divider{ font-size:16px; margin-bottom:14px; }
+
+  @media (prefers-reduced-motion: reduce){
+    .petal, .vinyl, .flame, .scroll-cue{ animation: none !important; }
+    .reveal{ transition: none; }
+  }
+</style>
+</head>
+<body class="locked">
+
+<div class="petals"></div>
+
+<!-- ===================== GATE / ENVELOPE ===================== -->
+<div id="gate">
+  <div class="gate-flowers">
+    <span class="gate-flower" style="top:8%; left:6%; animation-delay:0s;">🌸</span>
+    <span class="gate-flower small" style="top:18%; left:16%; animation-delay:1.2s;">🌷</span>
+    <span class="gate-flower big" style="top:10%; right:8%; animation-delay:.6s;">🌺</span>
+    <span class="gate-flower small" style="top:22%; right:18%; animation-delay:1.8s;">🌸</span>
+    <span class="gate-flower" style="bottom:10%; left:8%; animation-delay:.9s;">🌷</span>
+    <span class="gate-flower small" style="bottom:20%; left:20%; animation-delay:2.1s;">❀</span>
+    <span class="gate-flower big" style="bottom:8%; right:7%; animation-delay:.3s;">🌸</span>
+    <span class="gate-flower small" style="bottom:22%; right:20%; animation-delay:1.5s;">🌷</span>
+    <span class="gate-flower small" style="top:45%; left:4%; animation-delay:2.4s;">❀</span>
+    <span class="gate-flower small" style="top:48%; right:4%; animation-delay:.4s;">🌸</span>
+  </div>
+  <p class="prompt">For <span class="script" style="font-size:1.3em;">Nada</span> — open when ready 🤍</p>
+  <div class="envelope-wrap">
+    <div class="envelope">
+      <div class="letter-card"><span>Happy Birthday</span></div>
+      <div class="flap"></div>
+      <button class="seal" id="sealBtn" aria-label="Open your birthday envelope">♥</button>
+    </div>
+  </div>
+  <p class="hint">click the seal to open</p>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section id="hero">
+  <h1>Happy Birthday,<br>Nada</h1>
+  <div class="divider"></div>
+  <p class="sub">The dreams can become true</p>
+  <div class="scroll-cue">↓</div>
+</section>
+
+<!-- ===================== LETTER ===================== -->
+<section id="letter">
+  <div class="max reveal">
+    <div class="letter-paper">
+      <p>🎂 Hello, my little girl. TBH I don't know from where should I start, However I will talk about what I feel.
+        My story when I started loving u it was for a long time and continue w the sane severity till now. IDK How these feelings started or How to describe it, but genuinely It is best of the best. When I saw u at the first time through the whatsapp pfp, I said ohhh it's okay she looks good I imperssed with ur hair ur appearance ur eyes and every thing, though it wasn't a normal to look for girl and hold feelings to her for long time with ur style at first.
+        But truly every time I look at u I stuck like a baby who like thing and laughing on it, from the first I was always try to take my eyes off but I swear I always failed on this. IDK why I can't take my eyes off u, or why this happens automatically, but the feeling is fine. I think all things at school noticed that I always looking at u starting from the ants end with any person in the school 😂😂😂😂.
+        When u tald me that u and all ur friends noticed that I was surprised like how I didn't feel it. I feel like an idiot and I was mad that u notice my love and never give me any chances, but I can't blame I was a fukin' coward. Cause u will never take first step and this is normal, but I was obsessed more than u imagine more than I talk about. IDK how and why, but it goes so fast.
+        and from the day I saw u want to talk to u immediately, I tired to imperess u more than one time, also do anything that make u see me or gimme only one chance, but I failed more thn million time I THINK 😂😂😂😂 till I felt this is the most impossible mission in my life. Moreover I thank god for my programming knowledge that helped me little a bit to be the first choice to any club or anything else to be with u, I never join club in this school before checking are u in or not, If u were in then this is my turn if no then fuck it immediately 😂😂😂😂.
+        It seems crazy, but truly I can't control it and this stuff of love was abnormal to me. Like I was always the one who got the attention, but w u it was different. After this it was a big big big big big big drop I changed my mind to hate u, but everytime I saw u again I fail on it, u did't imagine how hard I try to do it, and then one look from those eyes I back to zero 😔😔😔.
+        In grade 11, I try again and again to hate till one day let's name it best day of my life hell nah I did anything to by w u I said me or no one else. although I felt that it will never ever become true. In this period, i don't imagine how much I think and focus, when u send me a message 😂😂. After u send the message I analyze all of the possible replies can I say and all possible message that came back again from u and try to make a bullet point for the steps, topics, and anything can be predicted before sending u the message back. I tried hard to made the conversation as long as I can. I know u didn't feel it, but it was like a mission to collect points 😂😂😂😂.
+        In somedays, I felt that u continue the conversation w me talk about random topics, this gave me like a power to open other topics near to million topic I think 😂😂. I was ready to ask u how many fingers do u have and made u prove it to continue texting, IDK how I was doing it, but it happened automatically. like whatttttttt I never open topic w anyone else for more than 5 mins. 
+        after that the worst thing happened, lemme call it by "I'm fucked up day". the day of Eid elso8ayar my truama from specific words started there "اتكلمت ب طريقه unprofessional" and "انا فريندلي مع كله ده مشكلتي" like HUH what do u say, what did I do. I was sleeping 😂😂😂😂. I think u feel it from my words that I'm trying to understand what I did and this is the first time I feel weak like that and not try to control my feelings my heart in this moment take all of control, and when I felt that I'm fucked I shut up and say fuckin words like "انتي شايفه ده صح؟" IDK what that like who are u, but I felt like I'm losing u again.
+        the first person know was mohamed amr, I started yapping to him like what when where how and he shocked like how why did u do it and I think I talk to him more than two days constantly asking him "ممكن تكون خافت طيب","عندي فرصه طيب","انا غلطت ف حاجه". and he regarded as a wise man and told me I think she is afffected by external thing, so after this I thank god that I told u about Zayed. I decided w him that this will be the last chance. IK I never open this topic when we start talking again, but u started to talk again and act like that there is anything happened, I felt confused little a bit, though I started to talk again about anything and open topics and one day u said "لو حد عرف و كده", so I realized that u give me chance.
+        I was happy, but in this period I started to thinking about anything I want to do before doing it and here anything means anything, cuz before u trust me if any wrong thing happened I will be fucked up again forever.
+        after that day by day we start talking and have longer conversations and u started to trust me more and more "I will try hard to not break it or never ler u feel regret that u fall in love w mee". It wasn't hard as much as I had thought, but it took time. Before I said "I love u" Many times I tried to say it indirectly and feel what is ur opinion till I feel that I want to say it in the day when I was in the mall, TBH I felt after knowing u that u also feeling to mme, however I was adding some suspense 😂😂😂.
+        then this lovely love story started and u didn't image how happy I'm w u. like damn u r mine nada loves mahmoud how this happened, everytime everyday everyhour everymminute everysecond everymillisecond and more, but this is the smallest unit I know, I'm shocked and dazzled that u r in love w me. U don't know how much I love u and how much I want to see and stay w u for long time. Be w u whatever u are happy sad mad crazy I was to be w u and just looking at u and listening to u talking about anything u want and I AMMMM SERIOUS U SHOULD MAKE PODCAST AND CALLED IT NADA TALKS I WILL BE THE ONLY SPECTATOR AND I SWEAR THAT I WILL LESTINING TO IT EVERYDAY.
+        IK I always make u mad and feel bad like don't do this do this and more, but this I want u to me mine and only mine I care about u I want to make u save IK u r mature but there are some points let's say u don't give it the suitable attention, we are different in many things, but this is very normal like let's do anything together let's try to understand each other, I will be w u till I die, and we will solve anything w each other and I will always make u priority and look after u till I die.
+        also I noticed that u try hard to change things to make me happy and I swear it's somthing great to me and genuinely make me always to do anything u want more and more, and feel wow she considered me when she do anything like u started to hide ur neck try to comeback early and u don't how this is very great like I feel wow she respects me. Moreover, I love uuuuuuuuuuuuuuuuuuuuuu and imagine anything u want and I will do it to u and never feel that u r weird about anything I have attention for whole u anything weird u want I will do it promise. I will always make u happy I make u mad lots of time, but by accident cause ur laugh ur excitment ur happiness are my goals and be ur savior and the first person come to ur mind whenn u feel misunderstandable or have any problem and I will be always here for u to listen to u and solve all of ur problem and if I couldn't I will sit next to u and make u laugh till ur stomach smashed from laughinggggg.
+        I want u never ever go away when we have problem or feel that I  couldn't understand u no just try to explain to me and I never told u enough or stopp talking all of my ears are ursss. IK I have issues and different mindset, but I swear I love u more than anyone could immagine, and I'm sure that no one love u more than me even when get mad from each other I will always  focus to make u not feel misunderstandable or not loved. 
+        and thank uuuu when I started overthinking like an idiot and talk about things ended or things that happened inside my head only, u started to understand me talk to me about it and never feel bad from it and try to make me thrilled with different ways by stand to my side and never said like "offffffffffff I'm bored", this very very very very very cutest thing in my life. thank u for loving me thank u for trying thank u for share things w me thank u for loving me again thank u for the days that u want to talk, but try to talk to me. 
+        I want our love to never end and be only u and me solve our problems fall in love in every time we see each other to focus to solve the problem to win the arguement and always to understand each other and oohhhhh nada ohhhhhhhhh when u run to me u don't imagine how it makes my whole life woowwwwwwwwwwwwwwwwwwwwwwwwwwwww.
+        Additionally, want u to know "I'm in love with all of ur verions", sometimes I got mad that I ain't the first one, but when I ain't blaming u I blame and all of them and I truly wish that u feel sad when I started to talk about these stuffs. I want to be sorry for anytime I make u feel sad whether I'm the reason or not, I will make u forgot all of these things I swear and will be ur savior and problem solver and ur lover and the one who always care about u and my love will be til the eterity.
+        I will be like a geany, but with unlimited wishes😉😉😉😉😉. I love u my babyy my love my girlfriend my whole life my destiny my best best best friend. I also dazzled that u handle all of my weird stuff like when I ams singing or telling u very bad jokes and also when I told things u don't want, but listen to me all of these things are very very very cute and like wowowowowowoowowowowowoowowow things thanks u wallahy for loving meeeeeeee ya nodiiiiiiiiiiiiiiii my little babyyyyyyyyyyyyyyy.
+        and Happy Birthday my babyyyyyyy I love this day more than anything the dayyyyyyyyyyyyyyyyyyy u came to the life I'm grateful for ur parents I swear. They gave me my world and the most beautiful girl I have ever seen in my entire life and yeaa u r very freakin fukin kolo kolo kolo hot and beautiful and mozza and 7lwaaaaa wallahy makona4 3ay4ennnnn kolo wala 7aga ganbek ya mozzaaaaa wallahy and love urself 4wayaaaaa enty f aswa' 7alatek 2a7la mn 22a7la 7aga f el worrld kolo 7rfyan take bosaaaa w negma wallahy ya mozza 😉😉😉.
+        I love NOOOOOOOODDDDDDDIIIIIIIIIIIIIIIIII, and wish u never stop loving meeeeeeeeeeee. U R MY RO7YYYYYYYYY W 2LBYYYYYYYY W MY WHOLE THINGSSSSSSSSSSSSSS AND WILL NEVER EVER MAKE U FEEL SAD MUAAHHHHH
+        I knowwww it's small thing but till we meet ya ro7yyyyyyy bamooottt fekeee wallahy awyyyyyyy  
+        I talked too much about loving story w u, cuz I really soo proud of it and want to write a novel about it. 
+        IMP NOTEEEEEEEEEE:
+        NADA
+        the  journey won't be easy be sure that we will fight million times about same things and also different things, cuz in my opinion this is how the true love have obtained and I will love u with all of ur insecurities and even when u hate me or get some bad feelings and need space and I want u to forgive me for any time I hurt u or make u feel that u ain't enough or feel upset I swear I never mean it nodiiiiii 
+        I wrote part of this letter on day we r sad from each, but even though I really love u from all of my heart and I'm sorry for making u sad.
+        I talk randomly IK, but I really bad on writing or explain my feelings 😂😂😂 I just talk 😂😂😂 
+        LOOOOOOVEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE UUUUUUUUUUUUUUUUUUUU BABEEEEEEEEEEEEEEEEEEEEE</p>
+      <p contenteditable="true">CANT'T TAKE MY EYESSSS OFFFF UUUUUUU</p>
+      <p class="signoff script" contenteditable="true">Ur love, MAHMOUD</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MEMORIES / REASONS ===================== -->
+<section id="memories">
+  <div class="max center memories-head reveal">
+    <h2 style="font-size:clamp(30px,5vw,48px);">A few reasons, out of many</h2>
+    <p class="script" style="font-size:22px; color:var(--rosegold); margin-top:10px;">ya Mozzaaaa</p>
+  </div>
+
+  <div class="max">
+    <!-- Repeat this block, swap image src + text for each memory (photos 1-5) -->
+    <div class="memory-row reveal">
+      <div class="polaroid" style="transform:rotate(-3deg);">
+        <div class="photo-frame">
+          <div class="photo-placeholder"><span class="icon">🤍</span><span>images/photo-1.jpg</span></div>
+          <img src="images/photo-1.jpg" alt="A memory with Nada" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.remove();">
+        </div>
+        <p class="caption" contenteditable="true">[caption]</p>
+      </div>
+      <div class="text">
+        <p class="num">01</p>
+        <p class="reason" contenteditable="true">[Write one specific thing you love about her — the way she laughs, a habit, something small most people miss.]</p>
+      </div>
+    </div>
+
+    <div class="memory-row reveal">
+      <div class="polaroid" style="transform:rotate(2deg);">
+        <div class="photo-frame">
+          <div class="photo-placeholder"><span class="icon">🤍</span><span>images/photo-2.jpg</span></div>
+          <img src="images/photo-2.jpg" alt="A memory with Nada" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.remove();">
+        </div>
+        <p class="caption" contenteditable="true">[caption]</p>
+      </div>
+      <div class="text">
+        <p class="num">02</p>
+        <p class="reason" contenteditable="true">[A memory or reason — maybe the first time you knew she was special, or a trip you took together.]</p>
+      </div>
+    </div>
+
+    <div class="memory-row reveal">
+      <div class="polaroid" style="transform:rotate(-2deg);">
+        <div class="photo-frame">
+          <div class="photo-placeholder"><span class="icon">🤍</span><span>images/photo-3.jpg</span></div>
+          <img src="images/photo-3.jpg" alt="A memory with Nada" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.remove();">
+        </div>
+        <p class="caption" contenteditable="true">[caption]</p>
+      </div>
+      <div class="text">
+        <p class="num">03</p>
+        <p class="reason" contenteditable="true">[Another reason — how she supports you, or something she does that always makes your day better.]</p>
+      </div>
+    </div>
+
+    <div class="memory-row reveal">
+      <div class="polaroid" style="transform:rotate(3deg);">
+        <div class="photo-frame">
+          <div class="photo-placeholder"><span class="icon">🤍</span><span>images/photo-4.jpg</span></div>
+          <img src="images/photo-4.jpg" alt="A memory with Nada" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.remove();">
+        </div>
+        <p class="caption" contenteditable="true">[caption]</p>
+      </div>
+      <div class="text">
+        <p class="num">04</p>
+        <p class="reason" contenteditable="true">[A funny or tender moment you shared together this year.]</p>
+      </div>
+    </div>
+
+    <div class="memory-row reveal">
+      <div class="polaroid" style="transform:rotate(-2deg);">
+        <div class="photo-frame">
+          <div class="photo-placeholder"><span class="icon">🤍</span><span>images/photo-5.jpg</span></div>
+          <img src="images/photo-5.jpg" alt="A memory with Nada" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.remove();">
+        </div>
+        <p class="caption" contenteditable="true">[caption]</p>
+      </div>
+      <div class="text">
+        <p class="num">05</p>
+        <p class="reason" contenteditable="true">[Something you're excited to still do or experience with her.]</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GALLERY ===================== -->
+<section id="gallery">
+  <div class="max center reveal">
+    <h2 style="font-size:clamp(30px,5vw,48px);">Our little gallery</h2>
+    <p style="color:var(--plum); opacity:.75; margin-top:10px;">tap a photo to see it bigger</p>
+  </div>
+  <div class="max gallery-grid reveal">
+    <!-- Photos 6-10 -->
+    <div class="gallery-item"><div class="photo-frame"><div class="photo-placeholder"><span class="icon">🤍</span><span>photo-6.jpg</span></div><img src="images/photo-6.jpg" alt="Us" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.remove();"></div></div>
+    <div class="gallery-item"><div class="photo-frame"><div class="photo-placeholder"><span class="icon">🤍</span><span>photo-7.jpg</span></div><img src="images/photo-7.jpg" alt="Us" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.remove();"></div></div>
+    <div class="gallery-item"><div class="photo-frame"><div class="photo-placeholder"><span class="icon">🤍</span><span>photo-8.jpg</span></div><img src="images/photo-8.jpg" alt="Us" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.remove();"></div></div>
+    <div class="gallery-item"><div class="photo-frame"><div class="photo-placeholder"><span class="icon">🤍</span><span>photo-9.jpg</span></div><img src="images/photo-9.jpg" alt="Us" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.remove();"></div></div>
+    <div class="gallery-item"><div class="photo-frame"><div class="photo-placeholder"><span class="icon">🤍</span><span>photo-10.jpg</span></div><img src="images/photo-10.jpg" alt="Us" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.remove();"></div></div>
+  </div>
+</section>
+
+<!-- ===================== MUSIC ===================== -->
+<section id="music">
+  <div class="max center reveal" style="margin-bottom:50px;">
+    <h2 style="font-size:clamp(30px,5vw,48px);">Our song</h2>
+  </div>
+  <div class="player reveal">
+    <div class="vinyl" id="vinyl"><div class="vinyl-label">♪</div></div>
+    <div class="player-info">
+      <p class="title" contenteditable="true">[Song Title]</p>
+      <p class="artist" contenteditable="true">[Artist Name]</p>
+      <button id="playBtn">▶ &nbsp;Play</button>
+      <p class="audio-hint" id="audioHint" hidden>Add your song as <strong>audio/our-song.mp3</strong> next to this file to hear it play.</p>
+    </div>
+  </div>
+  <audio id="audio" src="audio/our-song.mp3" preload="none"></audio>
+</section>
+
+<!-- ===================== FINALE ===================== -->
+<section id="finale">
+  <div class="max reveal">
+    <h2 style="font-size:clamp(30px,5vw,48px);">One more thing...</h2>
+    <p class="prompt" contenteditable="true">[Make a wish, Nada. Click each candle to blow it out.]</p>
+    <div class="cake">
+      <div class="candles">
+        <div class="candle"><span class="flame"></span></div>
+        <div class="candle"><span class="flame"></span></div>
+        <div class="candle"><span class="flame"></span></div>
+        <div class="candle"><span class="flame"></span></div>
+        <div class="candle"><span class="flame"></span></div>
+      </div>
+      <div class="tier1"></div>
+      <div class="tier2"></div>
+      <p class="cake-hint">click a candle to blow it out</p>
+    </div>
+
+    <div class="final-message" id="finalMessage">
+      <p contenteditable="true">[Write your closing birthday message here — the thing you want her to read last and remember most.]</p>
+      <p class="signoff script" contenteditable="true">With all my love, </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="heart-divider">♥ ♥ ♥</div>
+  <p contenteditable="true">Made with love, for Nada — [today's date]</p>
+</footer>
+
+<div id="lightbox"><img id="lightboxImg" src="" alt="Enlarged photo"></div>
+<div class="confetti-layer"></div>
+
+<script>
+  // ---------- Ambient petals ----------
+  (function spawnPetals(){
+    var container = document.querySelector('.petals');
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var count = reduced ? 0 : 16;
+    var glyphs = ['♥','❀','🌸','🌷'];
+    for(var i=0;i<count;i++){
+      var p = document.createElement('span');
+      p.className = 'petal';
+      p.style.left = (Math.random()*100) + 'vw';
+      p.style.animationDuration = (9 + Math.random()*10) + 's';
+      p.style.animationDelay = (Math.random()*10) + 's';
+      p.style.fontSize = (12 + Math.random()*14) + 'px';
+      p.style.opacity = (0.35 + Math.random()*0.4).toFixed(2);
+      p.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      container.appendChild(p);
+    }
+  })();
+
+  // ---------- Envelope gate ----------
+  var gate = document.getElementById('gate');
+  var sealBtn = document.getElementById('sealBtn');
+  sealBtn.addEventListener('click', function(){
+    sealBtn.disabled = true;
+    gate.classList.add('crack');
+    setTimeout(function(){ gate.classList.add('open'); }, 350);
+    setTimeout(function(){
+      gate.classList.add('hide');
+      document.body.classList.remove('locked');
+    }, 1750);
+    setTimeout(function(){ gate.style.display = 'none'; }, 2650);
+  });
+
+  // ---------- Scroll reveal ----------
+  var revealEls = document.querySelectorAll('.reveal');
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(function(el){ io.observe(el); });
+
+  // ---------- Gallery lightbox ----------
+  var lightbox = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  document.querySelectorAll('.gallery-item img, .memory-row img').forEach(function(img){
+    img.addEventListener('click', function(){
+      if(!img.classList.contains('loaded')) return;
+      lightboxImg.src = img.src;
+      lightbox.classList.add('active');
+    });
+  });
+  lightbox.addEventListener('click', function(){ lightbox.classList.remove('active'); lightboxImg.src=''; });
+
+  // ---------- Music player ----------
+  var audio = document.getElementById('audio');
+  var vinyl = document.getElementById('vinyl');
+  var playBtn = document.getElementById('playBtn');
+  var audioHint = document.getElementById('audioHint');
+  playBtn.addEventListener('click', function(){
+    if(audio.paused){
+      audio.play().then(function(){
+        vinyl.classList.add('spinning');
+        playBtn.textContent = '❚❚ Pause';
+        audioHint.hidden = true;
+      }).catch(function(){
+        audioHint.hidden = false;
+      });
+    } else {
+      audio.pause();
+      vinyl.classList.remove('spinning');
+      playBtn.textContent = '▶ Play';
+    }
+  });
+  audio.addEventListener('ended', function(){
+    vinyl.classList.remove('spinning');
+    playBtn.textContent = '▶ Play';
+  });
+
+  // ---------- Candles + finale ----------
+  var candles = document.querySelectorAll('.candle');
+  var finalMessage = document.getElementById('finalMessage');
+  candles.forEach(function(c){
+    c.addEventListener('click', function(){
+      if(c.classList.contains('out')) return;
+      c.classList.add('out');
+      var allOut = Array.prototype.every.call(candles, function(x){ return x.classList.contains('out'); });
+      if(allOut){
+        burstHearts();
+        finalMessage.classList.add('show');
+      }
+    });
+  });
+
+  function burstHearts(){
+    var layer = document.querySelector('.confetti-layer');
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var count = reduced ? 0 : 34;
+    for(var i=0;i<count;i++){
+      (function(){
+        var h = document.createElement('span');
+        h.className = 'confetti-heart';
+        h.textContent = '♥';
+        h.style.left = (40 + Math.random()*20) + '%';
+        h.style.setProperty('--dx', (Math.random()*220 - 110) + 'px');
+        h.style.setProperty('--dur', (1.3 + Math.random()*1.3) + 's');
+        h.style.color = Math.random() > 0.5 ? '#E3A9B4' : '#D8B26E';
+        layer.appendChild(h);
+        setTimeout(function(){ h.remove(); }, 3200);
+      })();
+    }
+  }
+</script>
+</body>
+</html>
